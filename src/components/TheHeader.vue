@@ -556,8 +556,6 @@ export default {
           height: 66px;
           font-size: 17px;
           position: relative;
-          text-decoration: none;
-          color: #333;
           &::after {
             content: "";
             position: absolute;
