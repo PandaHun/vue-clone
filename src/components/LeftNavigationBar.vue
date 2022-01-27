@@ -1,7 +1,7 @@
 <template>
   <nav
     v-if="done"
-    :class="{show: isShow} ">
+    :class="{show: isShowLNB} ">
     <div class="user">
       <a>로그인</a>
       <div class="flex-space"></div>
@@ -53,7 +53,8 @@
     </div>
   </nav>
   <div
-    v-if="isShow"
+    v-show="isShowLNB"
+    v-cloak
     class="nav-bg"
     @click="offNav('LNB')">
   </div>
@@ -69,8 +70,8 @@ export default {
     }
   },
   computed:{
-    isShow(){
-      return this.$store.state.navigation.isShow
+    isShowLNB(){
+      return this.$store.state.navigation.isShowLNB
     }
   },
   created(){
