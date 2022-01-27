@@ -112,6 +112,24 @@
       </ul>
     </div>
   </header>
+  <div
+    :class="{ fixed: isFixed }"
+    class="utils">
+    <div class="inner">
+      <ul>
+        <li
+          v-for="util in utils"
+          :key="util.name">
+          <a :href="util.href">{{ util.name }}</a>
+        </li>
+        <li>
+          <a
+            class="shocking-deal"
+            href="javascript:void(0)"></a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -133,6 +151,13 @@ export default {
         { name: '취소/반품/교환', href: 'javascript:void(0)' },
         { name: '고객센터', href: 'javascript:void(0)' },
         { name: '회원정보', href: 'javascript:void(0)' }
+      ],
+      utils: [
+        { name: '베스트', href: 'javascript:void(0)' },
+        { name: '쿠폰/혜택', href: 'javascript:void(0)' },
+        { name: '기획전', href: 'javascript:void(0)' },
+        { name: '오늘장보기', href: 'javascript:void(0)' },
+        { name: 'T공식대리점', href: 'javascript:void(0)' }
       ]
     }
   },
@@ -504,6 +529,53 @@ export default {
                 }
               }
             }
+          }
+        }
+      }
+    }
+  }
+  .utils {
+    border-top: 1px solid #f1f1f1;
+    &.fixed {
+      padding-top: 120px;
+    }
+    .inner {
+      width: 1240px;
+      margin: 0 auto;
+    }
+    ul {
+      display: flex;
+      li {
+        margin-right: 25px;
+        &:last-child {
+          margin-right: 0;
+        }
+        a {
+          display: flex;
+          align-items: center;
+          height: 66px;
+          font-size: 17px;
+          position: relative;
+          text-decoration: none;
+          color: #333;
+          &::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #f43142;
+            opacity: 0;
+          }
+          &:hover::after {
+            opacity: 1;
+          }
+          &.shocking-deal {
+            width: 63px;
+            background-image: url("https://trusting-williams-8cacfb.netlify.app/images/globals_2x.png");
+            background-position: -94px 0;
+            background-size: 363px;
           }
         }
       }
