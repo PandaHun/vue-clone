@@ -78,9 +78,38 @@
             </li>
           </ul>
         </div>
-        <div class="user-menu">
-        </div>
       </div>
+      <ul class="user-menu">
+        <li class="my">
+          <a href="javascript:void(0)">
+            <ul class="my__menu">
+              <li
+                v-for="item in myMenu"
+                :key="item.name">
+                <a :href="item.href">
+                  {{ item.name }}
+                </a>
+              </li>
+            </ul>
+          </a>
+        </li>
+        <li>
+          <a
+            id="order-menu"
+            href="javascript:void(0)"></a>
+        </li>
+        <li>
+          <a
+            id="carts"
+            href="javascript:void(0)"></a>
+        </li>
+        <li>
+          <a
+            id="recent-views"
+            href="javascript:void(0)"
+            @click="onNav('RNB')"></a>
+        </li>
+      </ul>
     </div>
   </header>
 </template>
@@ -96,7 +125,15 @@ export default {
       searchText: '',
       rankings: {},
       isShowRankingWrap: false,
-      tabIndex: 0
+      tabIndex: 0,
+      isFixed: false,
+      myMenu: [
+        { name: '나의 쿠폰', href: 'javascript:void(0)' },
+        { name: '주문/배송조회', href: 'javascript:void(0)' },
+        { name: '취소/반품/교환', href: 'javascript:void(0)' },
+        { name: '고객센터', href: 'javascript:void(0)' },
+        { name: '회원정보', href: 'javascript:void(0)' }
+      ]
     }
   },
   computed: {
@@ -131,11 +168,16 @@ export default {
         })
       })
     },
-    onNav() {
-        this.$store.dispatch('navigation/onNav')
+    onNav(name) {
+        this.$store.dispatch('navigation/onNav', name)
     },
-    search() {
+    async search() {
+        if (!this.searchText.trim()) return
 
+        const result = await this.$search({
+          searchText: this.searchText
+        })
+        console.log('search result is ', result)
     },
     toggleRankingWrap(event) {
       event.stopPropagation()
@@ -151,145 +193,145 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-header {
-  background-color: #fff;
-  &.fixed {
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 97;
-    box-shadow: 0 2px 8px rgba(#000, .07);
-    .inner {
-      height: 80px;
-    }
-  }
-  .inner {
-    height: 120px;
-    display: flex;
-    align-items: center;
-  }
-  .open-nav-drawer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow:
-      0 2px 6px rgba(#000,.06),
-      0 0 1px rgba(#000,.4);
-    &::after {
-      content: "";
-      display: block;
-      width: 36px;
-      height: 36px;
-      background-image: url("https://trusting-williams-8cacfb.netlify.app/images/globals_2x.png");
-      background-position: -302px -203px;
-      background-size: 363px;
-    }
-  }
-  .logo {
-    width: 94px;
-    height: 40px;
-    margin: 0 24px;
-    background-image: url("https://trusting-williams-8cacfb.netlify.app/images/globals_2x.png");
-    background-position: -162px 0;
-    background-size: 363px;
-    cursor: pointer;
-  }
-  .search {
-    position: relative;
-    input {
-      width: 500px;
-      height: 50px;
-      padding: 0 27px;
-      border: 1px solid #ddd;
-      border-radius: 25px;
-      box-sizing: border-box;
-      background-color: #fafafa;
-      outline: none;
-      font-size: 18px;
-      font-family: 'Noto Sans KR', sans-serif;
-      &::placeholder {
-        color: #bbb;
-      }
-    }
-    &__icon {
-      width: 50px;
-      height: 50px;
-      position: absolute;
+  header {
+    background-color: #fff;
+    &.fixed {
+      width: 100%;
+      position: fixed;
       top: 0;
-      right: 0;
-      cursor: pointer;
-      background-image: url("https://trusting-williams-8cacfb.netlify.app/images/globals_2x.png");
-      background-position: -162px -45px;
-      background-size: 363px;
-    }
-  }
-  .ranking {
-    width: 210px;
-    position: relative;
-    margin: 0 30px;
-    .swiper {
-      width: 182px;
-      height: 28px;
-      margin: 0;
-      .swiper-slide {
-        transition: .4s;
-        opacity: 0;
-        a {
-          display: block;
-          height: 28px;
-          line-height: 28px;
-          text-decoration: none;
-          font-size: 15px;
-          color: #333;
-          font-weight: 700;
-          .index {
-            margin-right: 10px;
-            color: #f43142;
-            font-style: italic;
-          }
-          &:hover .name {
-            color: #f43142;
-          }
-        }
-        &.swiper-slide-active {
-          opacity: 1;
-        }
+      left: 0;
+      z-index: 97;
+      box-shadow: 0 2px 8px rgba(#000, .07);
+      .inner {
+        height: 80px;
       }
     }
-    .open-more {
+    .inner {
+      height: 120px;
+      display: flex;
+      align-items: center;
+    }
+    .open-nav-drawer {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 28px;
-      height: 28px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      position: absolute;
-      top: 0;
-      right: 0;
-      z-index: 1; // Required! Cause Swiper.
       cursor: pointer;
-      user-select: none; // 실시간 쇼핑 검색어가 자동으로 선택(Selection)되는 것을 방지.
-      &:hover {
-        background-color: #ececec;
-      }
+      box-shadow:
+        0 2px 6px rgba(#000,.06),
+        0 0 1px rgba(#000,.4);
       &::after {
         content: "";
         display: block;
-        width: 7px;
-        height: 7px;
-        margin-top: -3px;
-        border: solid #999;
-        border-width: 0 1px 1px 0;
-        box-sizing: border-box;
-        transform: rotate(45deg);
+        width: 36px;
+        height: 36px;
+        background-image: url("https://trusting-williams-8cacfb.netlify.app/images/globals_2x.png");
+        background-position: -302px -203px;
+        background-size: 363px;
       }
     }
-          .ranking-wrap {
+    .logo {
+      width: 94px;
+      height: 40px;
+      margin: 0 24px;
+      background-image: url("https://trusting-williams-8cacfb.netlify.app/images/globals_2x.png");
+      background-position: -162px 0;
+      background-size: 363px;
+      cursor: pointer;
+    }
+    .search {
+      position: relative;
+      input {
+        width: 500px;
+        height: 50px;
+        padding: 0 27px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        box-sizing: border-box;
+        background-color: #fafafa;
+        outline: none;
+        font-size: 18px;
+        font-family: 'Noto Sans KR', sans-serif;
+        &::placeholder {
+          color: #bbb;
+        }
+      }
+      &__icon {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+        background-image: url("https://trusting-williams-8cacfb.netlify.app/images/globals_2x.png");
+        background-position: -162px -45px;
+        background-size: 363px;
+      }
+    }
+    .ranking {
+      width: 210px;
+      position: relative;
+      margin: 0 30px;
+      .swiper {
+        width: 182px;
+        height: 28px;
+        margin: 0;
+        .swiper-slide {
+          transition: .4s;
+          opacity: 0;
+          a {
+            display: block;
+            height: 28px;
+            line-height: 28px;
+            text-decoration: none;
+            font-size: 15px;
+            color: #333;
+            font-weight: 700;
+            .index {
+              margin-right: 10px;
+              color: #f43142;
+              font-style: italic;
+            }
+            &:hover .name {
+              color: #f43142;
+            }
+          }
+          &.swiper-slide-active {
+            opacity: 1;
+          }
+        }
+      }
+      .open-more {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1; // Required! Cause Swiper.
+        cursor: pointer;
+        user-select: none; // 실시간 쇼핑 검색어가 자동으로 선택(Selection)되는 것을 방지.
+        &:hover {
+          background-color: #ececec;
+        }
+        &::after {
+          content: "";
+          display: block;
+          width: 7px;
+          height: 7px;
+          margin-top: -3px;
+          border: solid #999;
+          border-width: 0 1px 1px 0;
+          box-sizing: border-box;
+          transform: rotate(45deg);
+        }
+      }
+      .ranking-wrap {
         position: absolute;
         top: 44px;
         z-index: 2;
@@ -407,6 +449,64 @@ header {
           }
         }
       }
+    }
+    .user-menu {
+      display: flex;
+      > li {
+        margin-right: 25px;
+        padding: 7px 0;
+        position: relative;
+        &:last-child {
+          margin-right: 0;
+        }
+        > a {
+          display: block;
+          width: 48px;
+          height: 48px;
+          background-image: url("https://trusting-williams-8cacfb.netlify.app/images/globals_2x.png");
+          background-size: 363px;
+        }
+        &:nth-child(1) > a { background-position: -106px -145px; }
+        &:nth-child(2) > a { background-position: 0px -198px; }
+        &:nth-child(3) > a { background-position: -53px -198px; }
+        &:nth-child(4) > a { background-position: -94px -70px; }
+        &:nth-child(1) > a:hover { background-position: -53px -145px; }
+        &:nth-child(2) > a:hover { background-position: -159px -145px; }
+        &:nth-child(3) > a:hover { background-position: 0px -145px; }
+        &:nth-child(4) > a:hover { background-position: -106px -198px; }
+        &.my {
+          &:hover {
+            .my__menu {
+              display: block;
+            }
+          }
+          .my__menu {
+            display: none;
+            width: 170px;
+            padding: 15px 0;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            z-index: 2;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            box-sizing: border-box;
+            box-shadow: 0 6px 24px -8px rgba(#000,.12);
+            background-color: #fff;
+            li {
+              a {
+                display: block;
+                padding: 7px 10px 7px 25px;
+                font-size: 15px;
+                &:hover {
+                  color: #f43142;
+                  background: #fafafa;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
-}
 </style>
