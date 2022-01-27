@@ -1,24 +1,24 @@
 export default {
   namespaced: true,
-  state: () =>({
-    isShowLNB : false,
-    isShowRNB : false,
+  state: () => ({
+    isShowLNB: false,
+    isShowRNB: false
   }),
-  mutations:{
-    setState(state, payload){
+  mutations: {
+    updateState (state, payload) {
       Object.keys(payload).forEach(key => {
         state[key] = payload[key]
       })
     }
   },
   actions: {
-    onNav({ commit }, name){
-      commit('setState', {
+    onNav ({ commit }, name) {
+      commit('updateState', {
         [`isShow${name}`]: true
       })
     },
-    offNav({ commit }, name){
-      commit('setState', {
+    offNav ({ commit }, name) {
+      commit('updateState', {
         [`isShow${name}`]: false
       })
     }
